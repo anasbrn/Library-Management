@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function role() {
         return $this->hasOne(Role::class);
     }
+
+    public function books() {
+        return $this->hasMany(Book::class);
+    }
 }
