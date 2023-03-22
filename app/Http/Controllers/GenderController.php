@@ -3,17 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gender;
+use App\Http\Resources\GenderResource;
 use App\Http\Requests\StoreGenderRequest;
 use App\Http\Requests\UpdateGenderRequest;
 
 class GenderController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $genders = Gender::orderBy('id')->get();
+
+        return response()->json([
+            'Genders' => GenderResource::collection($genders)
+        ], 201);
     }
 
     /**
