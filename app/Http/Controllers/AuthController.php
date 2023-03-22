@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function __construct() {
-        $this->middelware('auth:api', ['except' => ['login', 'register']]);
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $request->validate([
-            'email' => 'required|string|mail',
+            'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
+        $credentials = $request->only('email', 'password');
 
-        $creddentials = $request->only('email', 'password');
-
-        $token = Auth::attempt($creddentials);
-        if (!$token){
+        $token = Auth::attempt($credentials);
+        if (!$token) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized',
@@ -27,8 +30,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-
-        return resonse()->json([
+        return response()->json([
             'status' => 'success',
             'user' => $user,
             'authorisation' => [
@@ -38,21 +40,21 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(Request $request){
-        $request->validation([
+    public function register(Request $request)
+    {
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
         ]);
 
         $token = Auth::login($user);
-
         return response()->json([
             'status' => 'success',
             'message' => 'User created successfully',
