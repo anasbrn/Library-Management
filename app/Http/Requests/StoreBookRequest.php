@@ -11,7 +11,7 @@ class StoreBookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,12 @@ class StoreBookRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        // return [
+        //     'title' => 'required|max:30',
+        //     'author' => 'required',
+        //     'isbn' => 'required|bigInteger',
+        //     'date_pub' => 'required|date',
+        //     'gender' => 'required',
+        // ];
     }
 }
