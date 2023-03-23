@@ -10,9 +10,9 @@ use App\Http\Requests\UpdateGenderRequest;
 class GenderController extends Controller
 {
 
-    public function __construct() {
-        $this->middleware('auth:api');
-    }
+    // public function __construct() {
+    //     $this->middleware('auth:api');
+    // }
     /**
      * Display a listing of the resource.
      */
@@ -51,9 +51,18 @@ class GenderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Gender $gender)
+    public function show($gender)
     {
-        
+        $gender = Gender::find($gender);
+
+        if (!$gender){
+            return response()->json([
+                'message' => 'Gender not found'
+            ], 404);
+        }
+
+      
+        return new GenderResource($gender);
     }
 
     /**
