@@ -22,23 +22,30 @@ class GenderController extends Controller
 
         return response()->json([
             'Genders' => GenderResource::collection($genders)
-        ], 201);
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreGenderRequest $request)
     {
-        //
+        $gender = Gender::create(
+            $request->all()
+        );
+
+        return response()->json([
+            'message' => 'Gender has been created successfully',
+            'genders' => ($gender)
+        ], 201);
     }
 
     /**
@@ -46,7 +53,7 @@ class GenderController extends Controller
      */
     public function show(Gender $gender)
     {
-        //
+        
     }
 
     /**
