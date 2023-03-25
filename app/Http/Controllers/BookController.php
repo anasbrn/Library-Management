@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Http\Resources\BookResource;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Models\Gender;
 
 class BookController extends Controller
 {
@@ -39,14 +40,17 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        // $book = Book::create(
-        //     $request->all()
-        // );
+        $gender = Gender::firstOrCreate(['name' => $request->gender]);
+        $input = $request->all();
+        $input['user_id'] = auth()->user()->id;
+        $input['gender_id'] = $gender->id;
+        
+        $book = Book::create($input);
 
-        // return response()->json([
-        //     'message' => 'The book has been added successfully',
-        //     'book' => $book,
-        // ], 201);
+        return response()->json([
+            'message' => 'The book has been added successfully',
+            'book' => $book,
+        ], 201);
     }
 
     /**
