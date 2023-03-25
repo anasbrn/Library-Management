@@ -97,8 +97,21 @@ class GenderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Gender $gender)
+    public function destroy($gender)
     {
-        //
+
+        $gender = Gender::find($gender);
+    
+        if(!$gender){
+            return response()->json([
+                'message' => 'Gender not found'
+            ], 404);
+        }
+
+        $gender->delete();
+
+        return response()->json([
+            'message' => 'The gender has been deleted successfully'
+        ], 200);
     }
 }
