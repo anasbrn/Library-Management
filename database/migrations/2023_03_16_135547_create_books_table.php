@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('isbn');
             $table->dateTime('date_pub');
             $table->integer('num_pages');
-            $table->string('string');
+            $table->string('collection');
             $table->string('location');
             $table->string('status');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
