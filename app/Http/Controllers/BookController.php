@@ -40,7 +40,8 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        $gender = Gender::firstOrCreate(['name' => $request->gender]);
+        $gender = Gender::where('name', $request->gender)->first();
+        
         $input = $request->all();
         $input['user_id'] = auth()->user()->id;
         $input['gender_id'] = $gender->id;
@@ -81,9 +82,31 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookRequest $request, Book $book)
+    public function update(UpdateBookRequest $request, $book)
     {
-        //
+        $book = Book::find($book);
+        if(!$book) {
+             return response()->json([
+                 'message' => "Book not found"
+                ], 404);
+            }
+
+        
+        $input = $request->all();
+
+        $gender = Gender::where('name', $request->gender)->first();
+
+        if($gender){
+            $input['gender_id'] = $gender->id;
+        }
+        
+        $book->update($input);
+
+        return response()->json([
+            'status' => true,
+            'message' => "The book has been updated successfully",
+            'book' => $book,
+        ], 200);
     }
 
     /**
