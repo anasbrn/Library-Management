@@ -9,6 +9,11 @@ use App\Http\Requests\UpdateBookRequest;
 
 class BookController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -34,15 +39,31 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        //
+        // $book = Book::create(
+        //     $request->all()
+        // );
+
+        // return response()->json([
+        //     'message' => 'The book has been added successfully',
+        //     'book' => $book,
+        // ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show ($book)
     {
-        //
+        $book = Book::find($book);
+
+        if (!$book){
+            return response()->json([
+                'message' => 'Book not found'
+            ], 404);
+        }
+
+      
+        return new BookResource($book);
     }
 
     /**

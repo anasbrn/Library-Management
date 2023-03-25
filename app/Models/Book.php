@@ -14,9 +14,10 @@ class Book extends Model
         'author',
         'isbn',
         'date_pub',
-        'bum_pages',
-        'string',
+        'num_pages',
+        'collection',
         'location',
+        'status',
         'user_id',
         'gender_id',
     ];
