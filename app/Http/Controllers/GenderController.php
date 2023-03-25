@@ -76,9 +76,22 @@ class GenderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateGenderRequest $request, Gender $gender)
+    public function update(UpdateGenderRequest $request, $gender)
     {
-        //
+        $gender = Gender::find($gender);
+        if(!$gender) {
+             return response()->json([
+                 'message' => "Gender not found"
+                ], 404);
+            }
+            
+        $gender->update($request->all());
+        return response()->json([
+            'status' => true,
+            'message' => "Gender has been updated successfully",
+            'gender' => $gender,
+        ], 200);
+
     }
 
     /**
