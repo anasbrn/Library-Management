@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gender;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\GenderResource;
 use App\Http\Requests\StoreGenderRequest;
 use App\Http\Requests\UpdateGenderRequest;
@@ -38,6 +39,13 @@ class GenderController extends Controller
      */
     public function store(StoreGenderRequest $request)
     {
+
+        if(Gate::denies('manage-gender')){
+            return response()->json([
+                'message' => 'You are not authorized to create a gender',
+            ], 401);
+        }
+
         $gender = Gender::create(
             $request->all()
         );
@@ -78,6 +86,13 @@ class GenderController extends Controller
      */
     public function update(UpdateGenderRequest $request, $gender)
     {
+
+        if(Gate::denies('manage-gender')){
+            return response()->json([
+                'message' => 'You are not authorized to update this gender',
+            ], 401);
+        }
+
         $gender = Gender::find($gender);
         if(!$gender) {
              return response()->json([
@@ -99,6 +114,12 @@ class GenderController extends Controller
      */
     public function destroy($gender)
     {
+
+        if(Gate::denies('manage-gender')){
+            return response()->json([
+                'message' => 'You are not authorized to destroy this gender',
+            ], 401);
+        }
 
         $gender = Gender::find($gender);
     
